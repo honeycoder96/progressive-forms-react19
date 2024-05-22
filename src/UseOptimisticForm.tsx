@@ -3,11 +3,12 @@ import { useState, useActionState, useOptimistic } from 'react';
 import './App.css';
 
 function UseOptimisticForm() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string; }[]>([]);
   const [input, setInput] = useState('');
   const [optimisticMessages, setOptimisticMessages] = useOptimistic(messages);
 
-  const [error, submitAction, isPending] = useActionState(
+  const [error, submitAction, isPending] = useActionState<string, null>(
+    // @ts-ignore
     async (previousState, newName) => {
       setInput('');
       try {
@@ -29,7 +30,7 @@ function UseOptimisticForm() {
           { text: input, sender: 'user' },
           { text: 'Hello, user!', sender: 'bot' },
         ]);
-        resolve();
+        resolve(null);
       }, 3000);
     });
   };

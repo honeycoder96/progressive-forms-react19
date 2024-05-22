@@ -3,10 +3,11 @@ import { useState, useActionState } from 'react';
 import './App.css';
 
 function UseActionStateForm() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string; }[]>([]);
   const [input, setInput] = useState('');
 
-  const [error, submitAction, isPending] = useActionState(
+  const [error, submitAction, isPending] = useActionState<string>(
+    // @ts-ignore
     async (previousState, newName) => {
       setInput('');
       try {
@@ -28,7 +29,7 @@ function UseActionStateForm() {
           { text: input, sender: 'user' },
           { text: 'Hello, user!', sender: 'bot' },
         ]);
-        resolve();
+        resolve(null);
       }, 3000);
     });
   };

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 
 function BasicForm() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string; }[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,12 +15,12 @@ function BasicForm() {
           { text: input, sender: 'user' },
           { text: 'Hello, user!', sender: 'bot' },
         ]);
-        resolve();
+        resolve(null);
       }, 3000);
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setInput('');
@@ -30,7 +30,7 @@ function BasicForm() {
       // Simulate bot response
       await simulateBotResponse();
     } catch (error) {
-      setError(error);
+      setError(error as string);
     }
     setIsLoading(false);
   };

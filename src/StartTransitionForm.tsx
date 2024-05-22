@@ -2,7 +2,7 @@ import { useState, startTransition } from 'react';
 import './App.css';
 
 function StartTransitionForm() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string; }[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -15,12 +15,12 @@ function StartTransitionForm() {
           { text: input, sender: 'user' },
           { text: 'Hello, user!', sender: 'bot' },
         ]);
-        resolve();
+        resolve(null);
       }, 3000);
     });
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event : React.FormEvent<HTMLFormElement>) => {
     startTransition(async () => {
       event.preventDefault();
 
@@ -31,7 +31,7 @@ function StartTransitionForm() {
         // Simulate bot response
         await simulateBotResponse();
       } catch (error) {
-        setError(error);
+        setError(error as any);
       }
       setIsLoading(false);
     });

@@ -4,9 +4,9 @@ import { useFormStatus } from 'react-dom';
 import './App.css';
 
 function UseFormSTatusForm() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string; }[]>([]);
   const [input, setInput] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string>('');
 
   const simulateBotResponse = () => {
     return new Promise((resolve) => {
@@ -16,7 +16,7 @@ function UseFormSTatusForm() {
           { text: input, sender: 'user' },
           { text: 'Hello, user!', sender: 'bot' },
         ]);
-        resolve();
+        resolve(null);
       }, 3000);
     });
   };
@@ -29,7 +29,7 @@ function UseFormSTatusForm() {
       // Simulate bot response
       await simulateBotResponse();
     } catch (error) {
-      setError(error);
+      setError(error as string);
     }
   };
 
@@ -64,7 +64,9 @@ function UseFormSTatusForm() {
 export default UseFormSTatusForm;
 
 // more common in design systems
+// @ts-ignore added children to show how element can be passed as child, currently not being used
 function Pending({ children }: { children: React.ReactNode }) {
+  // @ts-ignore
   let { pending, data, method, action } = useFormStatus();
 
   return <>{pending ? 'Sending...' : 'Send'}</>;
