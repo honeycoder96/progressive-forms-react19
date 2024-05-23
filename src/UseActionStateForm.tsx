@@ -1,5 +1,5 @@
 import { useState, useActionState } from 'react';
-
+import { simulateBotResponse } from './helpers';
 import './App.css';
 
 function UseActionStateForm() {
@@ -11,8 +11,10 @@ function UseActionStateForm() {
     async (previousState, newName) => {
       setInput('');
       try {
-        // Simulate bot response
-        await simulateBotResponse();
+        const newMessages = await simulateBotResponse(input, messages);
+
+        // setting state based on server response
+        setMessages(newMessages);
       } catch (error) {
         return error;
       }
@@ -20,19 +22,6 @@ function UseActionStateForm() {
     },
     null //state initial value
   );
-
-  const simulateBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setMessages([
-          ...messages,
-          { text: input, sender: 'user' },
-          { text: 'Hello, user!', sender: 'bot' },
-        ]);
-        resolve(null);
-      }, 3000);
-    });
-  };
 
   // we will loose the pending state, because we are not using the startTransition we created
   return (

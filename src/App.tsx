@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from 'react';
 import BasicForm from './BasicForm';
 import StartTransitionForm from './StartTransitionForm';

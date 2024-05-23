@@ -1,5 +1,5 @@
 import { useState, useActionState, useOptimistic } from 'react';
-
+import { simulateBotResponse } from './helpers';
 import './App.css';
 
 function UseOptimisticForm() {
@@ -12,8 +12,10 @@ function UseOptimisticForm() {
     async (previousState, newName) => {
       setInput('');
       try {
-        // Simulate bot response
-        await simulateBotResponse();
+        const newMessages = await simulateBotResponse(input, messages);
+
+        // setting state based on server response
+        setMessages(newMessages);
       } catch (error) {
         return error;
       }
@@ -21,19 +23,6 @@ function UseOptimisticForm() {
     },
     null //state initial value
   );
-
-  const simulateBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setMessages([
-          ...messages,
-          { text: input, sender: 'user' },
-          { text: 'Hello, user!', sender: 'bot' },
-        ]);
-        resolve(null);
-      }, 3000);
-    });
-  };
 
   // we will loose the pending state, because we are not using the startTransition we created
   return (

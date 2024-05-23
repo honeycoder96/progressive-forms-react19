@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { simulateBotResponse } from './helpers';
 import { useFormStatus } from 'react-dom';
 
 import './App.css';
@@ -8,26 +9,16 @@ function UseFormSTatusForm() {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string>('');
 
-  const simulateBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setMessages([
-          ...messages,
-          { text: input, sender: 'user' },
-          { text: 'Hello, user!', sender: 'bot' },
-        ]);
-        resolve(null);
-      }, 3000);
-    });
-  };
-
   // Action do not receive event as param
   const submitAction = async () => {
     setInput('');
 
     try {
       // Simulate bot response
-      await simulateBotResponse();
+      const newMessages = await simulateBotResponse(input, messages);
+
+      // setting state based on server response
+      setMessages(newMessages);
     } catch (error) {
       setError(error as string);
     }

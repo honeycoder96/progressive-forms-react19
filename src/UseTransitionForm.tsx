@@ -1,4 +1,5 @@
 import { useState, useTransition } from 'react';
+import { simulateBotResponse } from './helpers';
 import './App.css';
 
 function UseTransitionForm() {
@@ -6,19 +7,6 @@ function UseTransitionForm() {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string>('');
   const [isPending, startTransition] = useTransition();
-
-  const simulateBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setMessages([
-          ...messages,
-          { text: input, sender: 'user' },
-          { text: 'Hello, user!', sender: 'bot' },
-        ]);
-        resolve(null);
-      }, 3000);
-    });
-  };
 
   const handleSubmit = async (event : React.FormEvent<HTMLFormElement>) => {
     startTransition(async () => {
@@ -28,7 +16,10 @@ function UseTransitionForm() {
 
       try {
         // Simulate bot response
-        await simulateBotResponse();
+        const newMessages = await simulateBotResponse(input, messages);
+
+        // setting state based on server response
+        setMessages(newMessages);
       } catch (error) {
         setError(error as string);
       }

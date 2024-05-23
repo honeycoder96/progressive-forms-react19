@@ -1,4 +1,5 @@
 import { useState, startTransition } from 'react';
+import { simulateBotResponse } from './helpers';
 import './App.css';
 
 function StartTransitionForm() {
@@ -6,19 +7,6 @@ function StartTransitionForm() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const simulateBotResponse = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setMessages([
-          ...messages,
-          { text: input, sender: 'user' },
-          { text: 'Hello, user!', sender: 'bot' },
-        ]);
-        resolve(null);
-      }, 3000);
-    });
-  };
 
   const handleSubmit = async (event : React.FormEvent<HTMLFormElement>) => {
     startTransition(async () => {
@@ -29,7 +17,10 @@ function StartTransitionForm() {
 
       try {
         // Simulate bot response
-        await simulateBotResponse();
+        const newMessages = await simulateBotResponse(input, messages);
+
+        // setting state based on server response
+        setMessages(newMessages);
       } catch (error) {
         setError(error as any);
       }
@@ -37,6 +28,7 @@ function StartTransitionForm() {
     });
   };
 
+  // we will loose the pending state behaviour
   return (
     <>
       <div className="messages">
